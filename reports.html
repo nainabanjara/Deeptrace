@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Reports{% endblock %}{% block crumb %}Investigation reports{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">YOUR ACTIVITY</div><h1>Investigation reports</h1><p>Open a report to see its findings and download a copy.</p></div></div>
+<section class="panel"><div class="panel-heading"><div><h2>All reports</h2><p>{{ rows|length }} saved investigation(s)</p></div></div>
+{% if rows %}<div class="table-wrap"><table><thead><tr><th>Report</th><th>Type</th><th>Risk</th><th>Date</th><th>View</th></tr></thead><tbody>{% for row in rows %}<tr><td><strong class="table-target">{{ row.target }}</strong><small class="sub-cell">Report #{{ row.id }}</small></td><td>{{ row.kind }}</td><td><span class="risk {{ row.risk_level|lower }}">{{ row.risk_level }} · {{ row.risk_score }}/100</span></td><td>{{ row.created_at }}</td><td><a class="text-link" href="{{ url_for('report_detail', report_id=row.id) }}">Open →</a></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state"><div class="empty-icon">▤</div><h3>No reports saved</h3><p>Your investigation reports will appear here.</p></div>{% endif %}</section>
+{% endblock %}

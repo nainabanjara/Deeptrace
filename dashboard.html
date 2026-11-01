@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">OVERVIEW</div><h1>Your safety workspace</h1><p>Check suspicious links, messages and websites in one place.</p></div><a class="btn primary" href="{{ url_for('link_checker') }}">＋ New investigation</a></div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-top"><span>Total investigations</span><span class="stat-icon blue">▤</span></div><strong>{{ total }}</strong><small>Saved in this browser's project database</small></div>
+  <div class="stat-card"><div class="stat-top"><span>High-risk results</span><span class="stat-icon red">!</span></div><strong>{{ high }}</strong><small>Results that need extra caution</small></div>
+  <div class="stat-card"><div class="stat-top"><span>Tools available</span><span class="stat-icon purple">⌘</span></div><strong>4</strong><small>Links · Messages · Domains · Photos</small></div>
+</div>
+<div class="quick-grid">
+  <a class="quick-card" href="{{ url_for('link_checker') }}"><div class="quick-icon blue">↗</div><div><h3>Check a link</h3><p>Look for warning signs in a website address.</p></div><b>→</b></a>
+  <a class="quick-card" href="{{ url_for('message_checker') }}"><div class="quick-icon purple">✉</div><div><h3>Check a message</h3><p>Look for common scam language in a text.</p></div><b>→</b></a>
+  <a class="quick-card" href="{{ url_for('domain_investigator') }}"><div class="quick-icon green">◎</div><div><h3>Investigate a domain</h3><p>Look up basic website address information.</p></div><b>→</b></a>
+  <a class="quick-card" href="{{ url_for('photo_checker') }}"><div class="quick-icon green">▧</div><div><h3>Check a photo</h3><p>Review photo details and basic editing clues.</p></div><b>→</b></a>
+</div>
+<div class="content-grid">
+  <section class="panel"><div class="panel-heading"><div><h2>Recent investigations</h2><p>Your latest checks appear here.</p></div><a class="text-link" href="{{ url_for('history') }}">View all →</a></div>
+    {% if recent %}
+    <div class="table-wrap"><table><thead><tr><th>Type / item</th><th>Risk</th><th>Date</th><th></th></tr></thead><tbody>
+    {% for row in recent %}<tr><td><span class="type-label">{{ row.kind }}</span><strong class="table-target">{{ row.target }}</strong></td><td><span class="risk {{ row.risk_level|lower }}">{{ row.risk_level }}</span></td><td>{{ row.created_at }}</td><td><a class="icon-link" href="{{ url_for('report_detail', report_id=row.id) }}">↗</a></td></tr>{% endfor %}
+    </tbody></table></div>
+    {% else %}<div class="empty-state"><div class="empty-icon">⌕</div><h3>No investigations yet</h3><p>Run your first check to see results here.</p><a class="btn secondary" href="{{ url_for('link_checker') }}">Start with a link</a></div>{% endif %}
+  </section>
+  <section class="panel tips-panel"><div class="panel-heading"><div><h2>Quick safety tips</h2><p>Small habits that make a big difference.</p></div></div>
+    <div class="tip"><span>01</span><div><b>Pause before clicking</b><p>Unexpected links deserve a second look.</p></div></div>
+    <div class="tip"><span>02</span><div><b>Keep OTPs private</b><p>Never share one-time codes with callers or message senders.</p></div></div>
+    <div class="tip"><span>03</span><div><b>Use official channels</b><p>Contact a bank or company using its official app or website.</p></div></div>
+  </section>
+</div>
+{% endblock %}

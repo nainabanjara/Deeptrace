@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Report #{{ report.id }}{% endblock %}{% block crumb %}Report #{{ report.id }}{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">SAVED INVESTIGATION · {{ report.created_at }}</div><h1>Report #{{ report.id }}</h1><p>{{ report.kind }} check · {{ report.target }}</p></div><a class="btn primary" href="{{ url_for('export_report', report_id=report.id) }}">↓ Download report</a></div>
+<div class="result-grid">
+<div class="panel score-panel"><div class="score-ring {{ report.risk_level|lower }}"><div><strong>{{ report.risk_score }}</strong><small>/ 100</small></div></div><span class="risk {{ report.risk_level|lower }}">{{ report.risk_level }} risk</span><p>{{ report.summary }}</p></div>
+<div class="panel findings-panel"><h3>Investigation findings</h3>{% for item in report.findings %}<div class="finding"><span class="finding-mark {{ item.status }}">{{ '✓' if item.status == 'good' else '!' }}</span><div><b>{{ item.title }}</b><p>{{ item.detail }}</p></div></div>{% endfor %}</div>
+</div>
+<div class="disclaimer">This report records the checks DeepTrace performed at the time shown. It is not a professional security certification.</div>
+<div class="action-row"><a class="btn secondary" href="{{ url_for('history') }}">← Back to history</a><form method="POST" action="{{ url_for('delete_report', report_id=report.id) }}" onsubmit="return confirm('Delete this report permanently?')"><button class="btn danger" type="submit">Delete report</button></form></div>
+{% endblock %}

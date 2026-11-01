@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>{% block title %}DeepTrace{% endblock %} | DeepTrace</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">D</span><span>DeepTrace<small>Digital safety, made clear</small></span></a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}"><span>▦</span> Dashboard</a>
+      <a href="{{ url_for('link_checker') }}" class="{% if request.endpoint == 'link_checker' %}active{% endif %}"><span>↗</span> Link scanner</a>
+      <a href="{{ url_for('message_checker') }}" class="{% if request.endpoint == 'message_checker' %}active{% endif %}"><span>✉</span> Message checker</a>
+      <a href="{{ url_for('domain_investigator') }}" class="{% if request.endpoint == 'domain_investigator' %}active{% endif %}"><span>◎</span> Domain investigator</a>
+      <a href="{{ url_for('photo_checker') }}" class="{% if request.endpoint == 'photo_checker' %}active{% endif %}"><span>▧</span> Photo checker</a>
+      <div class="nav-label nav-spacer">YOUR ACTIVITY</div>
+      <a href="{{ url_for('reports') }}" class="{% if request.endpoint in ['reports','report_detail'] %}active{% endif %}"><span>▤</span> Investigation reports</a>
+      <a href="{{ url_for('history') }}" class="{% if request.endpoint == 'history' %}active{% endif %}"><span>◷</span> Scan history</a>
+      <div class="nav-label nav-spacer">LEARN</div>
+      <a href="{{ url_for('guide') }}" class="{% if request.endpoint == 'guide' %}active{% endif %}"><span>ⓘ</span> How to use</a>
+      <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}"><span>✦</span> About DeepTrace</a>
+    </nav>
+    <div class="sidebar-bottom"><div class="status-dot"></div><span>Local project is running</span></div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+      <div class="breadcrumb">DeepTrace <span>/</span> {% block crumb %}Dashboard{% endblock %}</div>
+      <div class="top-right"><span class="secure-pill">● Private local database</span></div>
+    </header>
+    <section class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}{% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+      <footer>DeepTrace · A student-built digital safety assistant <span>Always verify important findings independently.</span></footer>
+    </section>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Domain investigator{% endblock %}{% block crumb %}Domain investigator{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">INVESTIGATION TOOL 03</div><h1>Domain investigator</h1><p>Look up basic information about a website's domain name.</p></div></div>
+<div class="tool-layout">
+<section class="panel tool-panel"><div class="tool-title"><div class="tool-icon green">◎</div><div><h2>Investigate a domain</h2><p>Enter a domain such as example.com.</p></div></div>
+<form method="POST" class="scan-form"><label for="domain">Domain name</label><div class="input-with-icon"><span>🌐</span><input id="domain" name="domain" type="text" placeholder="example.com" required value="{{ request.form.get('domain','') }}"></div><button class="btn primary full" type="submit">Investigate domain →</button></form>
+<div class="notice"><b>What this means:</b> A domain lookup can show whether a name points to an internet address. It does not identify the owner or certify that the website is safe.</div></section>
+<section class="panel side-info"><h3>Information you may see</h3><div class="check-line">✓ <span>Domain name format</span></div><div class="check-line">✓ <span>IP address results (DNS)</span></div><div class="check-line">✓ <span>Basic domain warning patterns</span></div><div class="mini-note">Some domains may not return results because of network settings or temporary DNS problems.</div></section>
+</div>
+{% if result %}{% include "result_card.html" %}{% endif %}
+{% endblock %}

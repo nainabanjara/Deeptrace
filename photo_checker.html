@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Photo checker{% endblock %}{% block crumb %}Photo checker{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">IMAGE FORENSICS</div><h1>Check a photo</h1><p>Look at image details and simple editing clues in plain language.</p></div></div>
+<div class="content-grid">
+<section class="panel">
+  <div class="panel-heading"><div><h2>Upload an image</h2><p>JPG, JPEG, PNG or WEBP · Maximum 8 MB</p></div></div>
+  <form method="post" enctype="multipart/form-data" class="form-stack">
+    <label class="upload-box"><span class="upload-symbol">▧</span><strong>Choose a photo from your device</strong><small id="photoName">No image selected</small><input type="file" name="photo" id="photoInput" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required></label>
+    <button class="btn primary" type="submit">Check this photo →</button>
+  </form>
+  <div class="notice" style="margin-top:18px"><b>Privacy:</b> The selected image is stored in this project's local uploads folder so the analysis can be reviewed. Do not upload private or sensitive photos.</div>
+</section>
+<section class="panel tips-panel"><div class="panel-heading"><div><h2>What this tool checks</h2><p>Helpful clues, not a final verdict.</p></div></div>
+  <div class="tip"><span>01</span><div><b>Photo details</b><p>File type, size, dimensions and camera information.</p></div></div>
+  <div class="tip"><span>02</span><div><b>Editing clues</b><p>Software tags and a JPEG compression comparison.</p></div></div>
+  <div class="tip"><span>03</span><div><b>AI image warning</b><p>Explains the limits of AI detection. This version does not claim a model-based AI verdict.</p></div></div>
+</section>
+</div>
+{% if result %}
+<section class="panel result-panel" style="margin-top:22px">
+ <div class="panel-heading"><div><div class="eyebrow">PHOTO CHECK COMPLETE · REPORT #{{ result.id }}</div><h2>{{ result.photo.filename }}</h2><p>{{ result.summary }}</p></div><span class="risk {{ result.risk_level|lower }}">{{ result.risk_level }} · {{ result.risk_score }}/100</span></div>
+ <div class="stats-grid photo-stats">
+  <div class="stat-card"><span>Image size</span><strong>{{ result.photo.width }} × {{ result.photo.height }}</strong></div>
+  <div class="stat-card"><span>File type</span><strong>{{ result.photo.format }}</strong></div>
+  <div class="stat-card"><span>File size</span><strong>{{ (result.photo.bytes / 1024)|round(1) }} KB</strong></div>
+ </div>
+ <h3>What we found</h3>
+ <div class="finding-list">{% for item in result.findings %}<div class="finding {{ item.status }}"><b>{{ item.title }}</b><p>{{ item.detail }}</p></div>{% endfor %}</div>
+ {% if result.photo.ela_image %}<div class="panel-heading" style="margin-top:20px"><div><h3>JPEG comparison view</h3><p>Bright areas show where pixels changed after recompression. This can happen for ordinary reasons too.</p></div></div><img class="ela-preview" src="{{ url_for('photo_file', filename=result.photo.ela_image) }}" alt="JPEG compression comparison preview">{% endif %}
+ <h3 style="margin-top:22px">File fingerprint</h3><p class="hash-value">SHA-256: {{ result.photo.sha256 }}</p>
+ {% if result.photo.metadata %}<h3>Photo metadata</h3><div class="table-wrap"><table><tbody>{% for key, value in result.photo.metadata.items() %}<tr><th>{{ key }}</th><td>{{ value }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p>No camera or software metadata was found in this file.</p>{% endif %}
+ <div class="button-row"><a class="btn secondary" href="{{ url_for('report_detail', report_id=result.id) }}">Open saved report</a><a class="btn secondary" href="{{ url_for('export_report', report_id=result.id) }}">Download report</a></div>
+</section>
+<div class="notice wide-notice"><b>Important:</b> DeepTrace cannot reliably prove that an image is fake or AI-generated. Metadata can be removed or changed, and compression clues can appear in genuine photos. Confirm important images using the original source and trusted context.</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script>document.getElementById('photoInput')?.addEventListener('change', function(){document.getElementById('photoName').textContent=this.files?.[0]?.name || 'No image selected';});</script>{% endblock %}

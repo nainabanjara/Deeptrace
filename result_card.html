@@ -1,0 +1,10 @@
+<section class="result-section">
+<div class="result-head"><div><div class="eyebrow">INVESTIGATION COMPLETE · REPORT #{{ result.id }}</div><h2>Here is what we found</h2></div><a class="btn secondary" href="{{ url_for('report_detail', report_id=result.id) }}">Open full report →</a></div>
+<div class="result-grid">
+<div class="panel score-panel"><div class="score-ring {{ result.risk_level|lower }}"><div><strong>{{ result.risk_score }}</strong><small>/ 100</small></div></div><span class="risk {{ result.risk_level|lower }}">{{ result.risk_level }} risk</span><p>{{ result.summary }}</p></div>
+<div class="panel findings-panel"><h3>What should you notice?</h3>
+{% for item in result.findings %}<div class="finding"><span class="finding-mark {{ item.status }}">{{ '✓' if item.status == 'good' else '!' }}</span><div><b>{{ item.title }}</b><p>{{ item.detail }}</p></div></div>{% endfor %}
+{% if result.live_info is defined and result.live_info.checked %}<div class="mini-note">Live check: {{ result.live_info.note }}</div>{% endif %}
+{% if result.ip_addresses is defined and result.ip_addresses %}<div class="mini-note">IP addresses: {{ result.ip_addresses|join(', ') }}</div>{% endif %}
+</div></div><div class="disclaimer">DeepTrace provides basic warning signs, not a guarantee. A low score does not mean a website or message is safe.</div>
+</section>
